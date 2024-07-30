@@ -9,14 +9,30 @@ array_map("htmlspecialchars", $_POST);
 
 $stmt = $conn->prepare("SELECT*FROM TblUsers WHERE Forename = :name ;");
 $stmt->bindParam(':name', $_POST['Username']);
-$stmt->execute(); //searches database or matching values of name
+$stmt->execute(); //searches database for matching values of name
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
 {
     $hashed = $row['Password'];
-    $attempt = $_POST['Password'];
+    $attempt = $_POST['Pword'];
 //compares values to the values in database
     if(password_verify($attempt, $hashed))
     {
-        header('Location: userpage.php');
+        if($row['Coach']>0)
+        {
+            header('Location: coachpage.php');
+        }
+        else
+        {
+            header('Location: userpage.php');
+        }
     }
+
 }
+
+$conn=null;
+?>
+<html>
+    <body>
+        <a href="login.php">Please try again</a>
+    </body>
+</html>

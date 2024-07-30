@@ -16,10 +16,11 @@ Coach TINYINT(1))");
 $stmt->execute();
 $stmt->closeCursor();
 #This creates a table called TblUsers in order to store data about the users of the website
-
-$stmt = $conn->prepare("INSERT INTO TblUsers (UserID, Surname, Forename, Password , Email, Phone, USER_DESCRIPTION, Coach) VALUES
-(NULL, 'Zhunisbekova', 'Lyazzat', 'p', 'lyazzat.education@gmail,com', NULL, NULL, '1') ");
-
+$hashed_password = password_hash('p', PASSWORD_DEFAULT); #hashes the coach's default password
+$stmt = $conn->prepare("INSERT INTO TblUsers (UserID, Surname, Forename, Password , Email, Phone, USER_DESCRIPTION, Coach) 
+VALUES
+(NULL, 'Zhunisbekova', 'Lyazzat', :password, 'lyazzat.education@gmail,com', NULL, NULL, '1') ");
+$stmt->bindParam(':password', $hashed_password);
 
 
 $stmt->execute();
