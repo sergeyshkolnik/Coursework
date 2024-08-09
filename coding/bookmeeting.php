@@ -27,11 +27,11 @@
         
         date_default_timezone_set('Asia/Almaty');
         //set the timezone to the local time
-        $date = date('m/d/Y h:i:s a', time()); 
+         
         //sets variable date to represent the current date and time
-        $stmt = $conn->prepare("SELECT * FROM TblFreeTimes WHERE FreeTime >= :date;");
+        $stmt = $conn->prepare("SELECT * FROM TblFreeTimes WHERE FreeTime >= CURRENT_DATE();");
         //searches the table 'freetimes' for available times in the future
-        $stmt->bindParam(':date', $date);
+        //$stmt->bindParam(':date', $date);
         $stmt->execute();
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
@@ -41,7 +41,7 @@
         ?>
         <td><?= $row['FreeTime'];?></td>
 
-        <option value="date" value="<?= $row['FreeTime'];?>">
+        <option value="<?= $row['FreeTime'];?>">
         <!-- creates a dropdown list with each of the options being an available time to book meeting-->
         <?php endforeach; ?>
         </select> 

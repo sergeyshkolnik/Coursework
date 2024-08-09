@@ -6,7 +6,7 @@ echo($_POST['date']);
 $stmt = $conn->prepare("SELECT UserID FROM TblUsers WHERE Forename = :name; ");
 $stmt->bindParam(':name', $_SESSION['user']);
 $stmt->execute();
-//$id = $stmt->fetch(PDO::FETCH_ASSOC);
+//fetches the userId of the user so that it can be inserted into the tblmeetings table
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     
     $stmt1 = $conn->prepare("INSERT INTO TblMeetings (UserID, StartTime, Agreed_by_coach, Meeting_desc, Notes_of_coach)
