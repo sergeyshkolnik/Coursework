@@ -3,7 +3,7 @@
     height:100%;
 }
 .jumbotron{
-    background-color:rgb(82, 19, 19);
+    background-color:rgb(141, 167, 186);
     text-align:center ;
 }
 .h1{
@@ -12,4 +12,44 @@
 }
 .welcone{
     text-align:center; 
+}
+.container-fluid{
+    color-scheme: rgb(165, 219, 201);
+}
+
+#calendar-body div.today {
+    background-color: #f00;
+    color: #fff;
+}
+
+#calendar-body {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    background-color: #333;
+}
+#calendar-body div {
+    padding: 20px;
+    background-color: #fff;
+    text-align: center;
+}
+.change-month {
+    cursor: pointer;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+#calendar {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+#calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #333;
+    color: #fff;
 }

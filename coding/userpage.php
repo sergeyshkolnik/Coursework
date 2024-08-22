@@ -15,6 +15,7 @@
 <h1>User Page</h1>
 </div>
 <a href="bookmeeting.php">Book a Meeting</a>
+<a href="usermeetings.php">View my Meetings</a>
 </html>
 <?php
 include_once('connection.php');
@@ -22,3 +23,4 @@ array_map("htmlspecialchars", $_POST);
 session_start();
 echo($_SESSION['user']);
 ?>
+

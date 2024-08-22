@@ -17,10 +17,14 @@
         <link rel = 'stylesheet' href = 'coursework.css'>
 </head>
 <body>
-    <form action="meetingrequestsprocess.php" method = "POST">
+    
     <?php
     include_once('connection.php');
-    $stmt = $conn->prepare("SELECT Surname, Forename, StartTime, Meeting_desc
+    session_start();
+    ?>
+    
+    <?php
+    $stmt = $conn->prepare("SELECT MeetingID, Surname, Forename, StartTime, Meeting_desc
     FROM TblUsers
     INNER JOIN TblMeetings ON TblUsers.UserID = TblMeetings.UserID
     WHERE Agreed_by_coach = 0 AND StartTime >= CURRENT_DATE();");
@@ -28,38 +32,52 @@
     //of the meeting recipient in one query
     $stmt->execute();  
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    foreach ($rows as $row):
-    
-    
     ?>
-    
+
     <div class = 'jumbotron'>
     <h1> Pending Meeting Requests</h1>
     </div>
+    <?php
+    foreach ($rows as $row):
+    //creates a loop though all the rows in the table 
     
-    <div class="row">
-    <div class = 'col-sm-2'>
-        <p> <?=$row['Surname']; ?> </p>
-    </div>
-
-    <div class = 'col-sm-2'>
-    <p> <?=$row['Forename'];?> </p>
-    </div>
+    ?>
+<form action="meetingrequestsprocess.php" method = "POST">
+<div class = "row">
+<div>
+<input type = "hidden" name = "id" value = '<?php echo $row['MeetingID']  ?>'>
+<!-- uses a hidden variable in order to post the meetingiD to the next page -->
+</div>
+<div class = "col-sm-2">
+<?php  echo $row['Surname']?>
+</div>   
+<div class = "col-sm-2">  
+<?php  echo $row['Forename']?>
+</div>
+<div class = "col-sm-2">  
+<?php  echo $row['StartTime']?>
+</div>  
+<div class = "col-sm-3">    
+<?php  echo $row['Meeting_desc']?>
+</div>   
+    <div class = "col-sm-1">  
+    <label for="choice">Accept</label>
     
-    <div class = 'col-sm-2'>
-        <p> <?=$row['StartTime'];?> </p>
+    <input type="radio" name = "choice" value = '1'>
     </div>
-    <div class = 'col-sm-2'>
-        <p> <?=$row['Meeting_desc'];?> </p>
+    <div class = "col-sm-1">    
+    <label for="choice">Deny</label>
+    <input type="radio" name = "choice" value = '0'>
     </div>
-    <div class = 'col-sm-1'>
-        <input type="submit" value = "Accept">
-    </div>
-    <div class = 'col-sm-1'>
-        <input type="submit" value = "Deny">
+    <div class = "col-sm-1">
+    <input type="submit" value = 'Confirm'>
+    
     </div>
     </div>
-    <?php endforeach; ?>
     </form>
+
+</div>
+    
+    <?php endforeach; ?>
     </body>
     </html>

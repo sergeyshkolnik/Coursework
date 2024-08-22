@@ -29,7 +29,8 @@ $stmt->closeCursor();
 
 $stmt = $conn->prepare("DROP TABLE IF EXISTS TblMeetings;
 CREATE TABLE TblMeetings
-(UserID INT(4) NOT NULL,
+(MeetingID INT(4) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+UserID INT(4) NOT NULL,
 StartTime DATETIME NOT NULL,
 Agreed_by_coach INT(1) NOT NULL,
 Meeting_desc VARCHAR(2000) NOT NULL,
