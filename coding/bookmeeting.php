@@ -12,14 +12,7 @@
 
         
 </head>
-<div class = "jumbotron">
-    <h1> Book A Meeting</h1>
-</div>
-<div class = "container">
-    <form action = "bookmeetingsprocess.php" method = "POST"> 
-    <label for="date">Choose a date and time from available times:</label>   
-    <select name="date" id="date">  
-        <?php
+<?php
         
         include_once('connection.php');
         array_map("htmlspecialchars", $_POST);
@@ -34,14 +27,25 @@
         //$stmt->bindParam(':date', $date);
         $stmt->execute();
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
         //fetches from the database as an associative array
+        ?>
+<div class = "jumbotron">
+    <h1> Book A Meeting</h1>
+</div>
+<div class = "container">
+    <form action = "bookmeetingsprocess.php" method = "POST"> 
+    <label for="date">Choose a date and time from available times:</label>   
+    <select name="date" id = "date">  
+
+        <?php
+        
+
         foreach ($rows as $row):
         
         ?>
-        <td><?= $row['FreeTime'];?></td>
+        
 
-        <option value="<?= $row['FreeTime'];?>">
+        <option value="<?= $row['FreeTime'];?>"><?= $row['FreeTime'];?></option>
         <!-- creates a dropdown list with each of the options being an available time to book meeting-->
         <?php endforeach; ?>
         </select> 

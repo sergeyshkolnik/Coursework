@@ -38,6 +38,7 @@
     <h1> Pending Meeting Requests</h1>
     </div>
     <?php
+    print_r($rows);
     foreach ($rows as $row):
     //creates a loop though all the rows in the table 
     
@@ -48,9 +49,12 @@
 <input type = "hidden" name = "id" value = '<?php echo $row['MeetingID']  ?>'>
 <!-- uses a hidden variable in order to post the meetingiD to the next page -->
 </div>
+<div>
+<input type = "hidden" name = "time" value = '<?php echo $row['StartTime']  ?>'>
+</div>
 <div class = "col-sm-2">
 <?php  echo $row['Surname']?>
-</div>   
+</div>  1 
 <div class = "col-sm-2">  
 <?php  echo $row['Forename']?>
 </div>
