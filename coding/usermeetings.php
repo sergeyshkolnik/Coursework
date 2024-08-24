@@ -17,83 +17,205 @@
         <link rel = 'stylesheet' href = 'coursework.css'>
         
 
-
+       
+    <style>
+        /* calendar */
+    table.calendar		{ border-left:1px solid #999; }
+    tr.calendar-row	{  }
+    td.calendar-day	{ 
+        height:120px; 
+        font-size:14px; 
+        position:relative; 
+        text-align:center; } 
+    * html div.calendar-day { height:120px; }
+    td.calendar-day:hover	{ background:#eceff5; }
+    td.calendar-day-np	{ 
+        background:#eee; 
+        min-height:120px; } 
+    * html div.calendar-day-np { height:120x; }
+    td.calendar-day-head { 
+        background:#ccc; 
+        font-weight:bold; 
+        text-align:center; 
+        width:120px; 
+        padding:5px; 
+        border-bottom:1px solid #999; 
+        border-top:1px solid #999; 
+        border-right:1px solid #999; }
+    div.day-number		{ 
+        position:absolute;
+        top:5px;
+        right:5px;
+        background:#343a40; 
+        padding:5px; 
+        color:#fff; 
+        font-weight:bold; 
+        float:right; 
+        margin:-5px -5px 0 0; 
+        width:25px; 
+    }
+    /* shared */
+    td.calendar-day, td.calendar-day-np { 
+        width:120px; 
+        padding:5px; 
+        border-bottom:1px solid #999; 
+        border-right:1px solid #999; }
+    .boxy{
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
 </head>
-<?php session_start();?>
-<html>
-    <body>
-        
-    
-    <div class = "jumbotron">
-        Your Meetings 
-    </div>
+<body>
 
-    <div id="calendar">
-        <div id="calendar-header">
-            <span id="month-prev" class="change-month"><</span>
-            <h1 id="month"></h1>
-            <span id="month-next" class="change-month">></span>
-        </div>
-        <div id="calendar-body"></div>
-    </div>
-    <script src="script.js">
-
-
-    
-</script>
+<div id="navigation"></div>
 
 
 <?php
+include('connection.php');
+session_start();
+function build_html_calendar($year, $month, $events = null) {
 
-include_once('connection.php');
-$stmt = $conn->prepare("SELECT StartTime
-FROM TblUsers
-INNER JOIN TblMeetings ON TblUsers.UserID = TblMeetings.UserID
-WHERE Agreed_by_coach = 1 AND :name = Forename
- ;  ");
-$stmt->bindParam(':name',$_SESSION['user']);
-//SQL statement first joins the meetings and user tables and then selects the meeting times for the particular
-//user that is logged in to the system
-$stmt->execute();
+    // CSS classes
+    $css_cal = 'calendar';
+    $css_cal_row = 'calendar-row';
+    $css_cal_day_head = 'calendar-day-head';
+    $css_cal_day = 'calendar-day';
+    $css_cal_day_number = 'day-number';
+    $css_cal_day_blank = 'calendar-day-np';
+    $css_cal_day_event = 'calendar-day-event';
+    $css_cal_event = 'calendar-event';
+  
+    // Table headings
+    $headings = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+  
+    // Start: draw table
+    $calendar =
+      "<table cellpadding='0' cellspacing='0' class='{$css_cal}'>" .
+      "<tr class='{$css_cal_row}'>" .
+      "<td class='{$css_cal_day_head}'>" .
+      implode("</td><td class='{$css_cal_day_head}'>", $headings) .
+      "</td>" .
+      "</tr>";
+  
+    // Days and weeks
+    $running_day = date('N', mktime(0, 0, 0, $month, 1, $year));
+    $days_in_month = date('t', mktime(0, 0, 0, $month, 1, $year));
+  
+    // Row for week one
+    $calendar .= "<tr class='{$css_cal_row}'>";
+  
+    // Print "blank" days until the first of the current week
+    for ($x = 1; $x < $running_day; $x++) {
+      $calendar .= "<td class='{$css_cal_day_blank}'> </td>";
+    }
+  
+    // Keep going with days...
+    for ($day = 1; $day <= $days_in_month; $day++) {
+  
+      // Check if there is an event today
+      $cur_date = date('Y-m-d', mktime(0, 0, 0, $month, $day, $year));
+      $draw_event = false;
+      if (isset($events) && isset($events[$cur_date])) {
+        $draw_event = true;
+      }
+  
+      // Day cell
+      $calendar .= $draw_event ?
+        "<td class='{$css_cal_day} {$css_cal_day_event}'>" :
+        "<td class='{$css_cal_day}'>";
+  
+      // Add the day number
+      $calendar .= "<div class='{$css_cal_day_number}'>" . $day . "</div>";
+  
+      // Insert an event for this day
+      if ($draw_event) {
+        $calendar .=
+          "<div class='{$css_cal_event}'>" .
+          $events['date']['text'] .
+          "</div>";
+      }
+  
+      // Close day cell
+      $calendar .= "</td>";
+  
+      // New row
+      if ($running_day == 7) {
+        $calendar .= "</tr>";
+        if (($day + 1) <= $days_in_month) {
+          $calendar .= "<tr class='{$css_cal_row}'>";
+        }
+        $running_day = 1;
+      }
+  
+      // Increment the running day
+      else {
+        $running_day++;
+      }
+  
+    } // for $day
+  
+    // Finish the rest of the days in the week
+    if ($running_day != 1) {
+      for ($x = $running_day; $x <= 7; $x++) {
+        $calendar .= "<td class='{$css_cal_day_blank}'> </td>";
+      }
+    }
+  
+    // Final row
+    $calendar .= "</tr>";
+  
+    // End the table
+    $calendar .= '</table>';
+  
+    // All done, return result
+    return $calendar;
+  };
+  
+  $stmt = $conn->prepare("SELECT StartTime FROM TblMeetings
+  INNER JOIN TblUsers ON TblMeetings.UserID = TblUsers.UserID
+  WHERE Forename = :name AND Agreed_by_coach = 1");
+  $stmt->bindParam(':name', $_SESSION['user']);
+  $stmt->execute();
 
-$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  
+  
+  $events=array();
+  #creates associative array of associative arrays for calendar
+  
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+    print_r($row);
+    $datetime = $row['StartTime'];
+    
+    $date = date('Y-m-d', strtotime($datetime));
+    
+    $time = date('H:i', strtotime($datetime));
+    //separates the date and the time
+    if (array_key_exists($row['StartTime'],$events))
+    {
+        $events[$date][$time]=$events[$date][$time];
+    }else{
+        $events[$row['StartTime']]=array('text'=>$time."<br>");
+        $events[$row['StartTime']]=array('date'=>$date);
+    }
 
-foreach ($rows as $row):
-//starts a loop to convert the array of values to individual time values
-$myvalue = $row['StartTime'];
-
-$datetime = new DateTime($myvalue);
-
-$date = $datetime->format('Y-m-d');
-$time = $datetime->format('H:i:s');
-$day = date('d', strtotime($date));
-$month = date('m', strtotime($date));
-$year = date('y', strtotime($date));
-//splitting the date into separate day month and year
-echo($day);
-echo($month);
-echo($year);
-
-//this sequence of code separates the datetime variable into separate date and time variables
-
+  }
+  for($x=0;$x<=2;$x++){
+    $year=date('Y');
+    $month=date('m')+$x;
+    if($month>12){
+       $month=$month-12;
+       $year+=1;
+    }
+    print_r($events);
+    $monthName = date("F", mktime(0, 0, 0, $month, 10));
+    echo "<h2 style='text-align:center'>".$monthName." ".$year."</h2>";
+    echo "<div class='boxy'>";
+    echo build_html_calendar($year, $month,$events);
+    echo "</div>";   
+}
 ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </body>
 </html>
-<?php endforeach;?>

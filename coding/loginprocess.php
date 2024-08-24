@@ -17,8 +17,11 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
 //compares values to the values in database
     if(password_verify($attempt, $hashed))
     {
+        
+
         if($row['Coach']>0)
         {
+            
             header('Location: coachpage.php');
         }
         else
