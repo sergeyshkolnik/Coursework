@@ -65,6 +65,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+    
     }
 </style>
 </head>
@@ -102,8 +103,9 @@ function build_html_calendar($year, $month, $events = null) {
   
     // Days and weeks
     $running_day = date('N', mktime(0, 0, 0, $month, 1, $year));
+    
     $days_in_month = date('t', mktime(0, 0, 0, $month, 1, $year));
-  
+    
     // Row for week one
     $calendar .= "<tr class='{$css_cal_row}'>";
   
@@ -132,10 +134,16 @@ function build_html_calendar($year, $month, $events = null) {
   
       // Insert an event for this day
       if ($draw_event) {
+        
         $calendar .=
           "<div class='{$css_cal_event}'>" .
-          $events['date']['text'] .
-          "</div>";
+          $events[$cur_date]['text'] .
+          
+        "<form action = 'viewevents.php' method = 'POST'>
+         <input type = 'hidden' name = 'date' value = '{$cur_date}'>
+         <input type = 'submit' value = 'View all events'></input>
+         </form>
+         </div>";
       }
   
       // Close day cell
@@ -186,19 +194,21 @@ function build_html_calendar($year, $month, $events = null) {
   #creates associative array of associative arrays for calendar
   
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-    print_r($row);
+    
     $datetime = $row['StartTime'];
     
     $date = date('Y-m-d', strtotime($datetime));
     
     $time = date('H:i', strtotime($datetime));
+    print_r($time);
     //separates the date and the time
     if (array_key_exists($row['StartTime'],$events))
     {
-        $events[$date][$time]=$events[$date][$time];
+        $events[$date]['text']=$events[$row[$date]]['text']."<br>".$time;
+        
     }else{
-        $events[$row['StartTime']]=array('text'=>$time."<br>");
-        $events[$row['StartTime']]=array('date'=>$date);
+        $events[$date]=array('text'=>$time);
+        
     }
 
   }
@@ -209,7 +219,7 @@ function build_html_calendar($year, $month, $events = null) {
        $month=$month-12;
        $year+=1;
     }
-    print_r($events);
+    
     $monthName = date("F", mktime(0, 0, 0, $month, 10));
     echo "<h2 style='text-align:center'>".$monthName." ".$year."</h2>";
     echo "<div class='boxy'>";
