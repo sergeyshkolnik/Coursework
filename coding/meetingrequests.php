@@ -54,7 +54,7 @@
 </div>
 <div class = "col-sm-2">
 <?php  echo $row['Surname']?>
-</div>  1 
+</div>  
 <div class = "col-sm-2">  
 <?php  echo $row['Forename']?>
 </div>

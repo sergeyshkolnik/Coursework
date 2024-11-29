@@ -1,9 +1,9 @@
 <?php
 include_once('connection.php');
-array_map("htmlspecialchars", $_POST,);
+array_map("htmlspecialchars", $_POST);
 session_start();
 echo($_POST['date']);
-$stmt = $conn->prepare("SELECT UserID FROM TblUsers WHERE Forename = :name; ");
+$stmt = $conn->prepare("SELECT UserID FROM TblUsers WHERE Username = :name; ");
 $stmt->bindParam(':name', $_SESSION['user']);
 $stmt->execute();
 //fetches the userId of the user so that it can be inserted into the tblmeetings table

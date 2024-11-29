@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-        <title>Oundle School Library</title>
+        <title>Coaching</title>
         <!-- <link rel = 'stylesheet' href = 'coursework.css'> -->
         
         

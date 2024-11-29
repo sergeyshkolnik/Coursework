@@ -3,6 +3,7 @@ include_once("connection.php");
 $stmt = $conn->prepare("DROP TABLE IF EXISTS TblUsers;
 CREATE TABLE TblUsers
 (UserID INT(4) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+Username VARCHAR(20) NOT NULL,
 Surname VARCHAR(20) NOT NULL,
 Forename VARCHAR(20) NOT NULL,
 Password VARCHAR(200) NOT NULL,
@@ -17,7 +18,7 @@ $stmt->execute();
 $stmt->closeCursor();
 #This creates a table called TblUsers in order to store data about the users of the website
 $hashed_password = password_hash('p', PASSWORD_DEFAULT); #hashes the coach's default password
-$stmt = $conn->prepare("INSERT INTO TblUsers (UserID, Surname, Forename, Password , Email, Phone, USER_DESCRIPTION, Coach) 
+$stmt = $conn->prepare("INSERT INTO TblUsers (UserID, Surname,Forename, Password , Email, Phone, USER_DESCRIPTION, Coach) 
 VALUES
 (NULL, 'Zhunisbekova', 'Lyazzat', :password, 'lyazzat.education@gmail,com', NULL, NULL, '1') ");
 $stmt->bindParam(':password', $hashed_password);
@@ -41,10 +42,10 @@ $stmt->closeCursor();
 
 $stmt = $conn->prepare("DROP TABLE IF EXISTS TblChats;
 CREATE TABLE TblChats
-(UserID INT(4) NOT NULL,
-CoachID INT(4) NOT NULL,
+(MessageID INT(10) NOT NULL,
+FromCoach TINYINT(1) NOT NULL,
 TimeSent DATETIME NOT NULL,
-MessageSender_ID INT(4) NOT NULL,
+Username VARCHAR(30) NOT NULL,
 Message VARCHAR(65535) NOT NULL);");
 $stmt->execute();
 $stmt->closeCursor();

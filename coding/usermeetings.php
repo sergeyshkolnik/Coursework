@@ -71,8 +71,20 @@
 </head>
 <body>
 
-<div id="navigation"></div>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="userpage.php">Home</a></li>
+      <li><a href="login.php">Log In</a></li>
+      <li><a href="signup.php">Sign Up</a></li>
+      
+    </ul>
+  </div>
+</nav>
 
+<div id="navigation"></div>
+<br><br><br><br>
 
 <?php
 include('connection.php');
