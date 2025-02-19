@@ -25,6 +25,8 @@
       <li class="active"><a href="#">Home</a></li>
       <li class = "active"><a href="bookmeeting.php">Book a Meeting</a></li>
       <li class = "active"><a href="usermeetings.php">View My Meetings</a></li>
+      <li class = "active"><a href="usermessage.php">Send a message</a></li>
+      <li class = "active"><a href="displayusermessage.php">View My Messages</a></li>
 
       
     </ul>

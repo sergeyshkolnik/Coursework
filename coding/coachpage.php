@@ -26,8 +26,13 @@
     
     <ul class="nav navbar-nav">
       <li class="active"><a href="#">Home</a></li>
-      <li><a href="login.php">Log In</a></li>
-      <li><a href="signup.php">Sign Up</a></li>
+      <li><a href="meetingrequests.php">View Meeting Requests</a></li>
+      <li><a href="coachmessage.php">Send a Message</a></li>
+      <li><a href="displaycoachmessage.php">View Message</a></li>
+      <li><a href="coachmeetings.php">View my meetings</a></li>
+      <li><a href="freetimes.php">Assign free times</a></li>
+
+
       
     </ul>
   </div>

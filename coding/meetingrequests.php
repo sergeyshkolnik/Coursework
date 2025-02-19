@@ -16,6 +16,20 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
         <link rel = 'stylesheet' href = 'coursework.css'>
 </head>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="#">Home</a></li>
+      <li><a href="meetingrequests.php">View Meeting Requests</a></li>
+      <li><a href="coachmessage.php">Send a Message</a></li>
+      <li><a href="displaycoachmessage.php">View Message</a></li>
+      <li><a href="coachmeetings.php">View my meetings</a></li>
+
+      
+    </ul>
+  </div>
+</nav>
 <body>
     
     <?php
@@ -38,7 +52,7 @@
     <h1> Pending Meeting Requests</h1>
     </div>
     <?php
-    print_r($rows);
+    
     foreach ($rows as $row):
     //creates a loop though all the rows in the table 
     

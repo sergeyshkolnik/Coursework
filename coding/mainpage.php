@@ -25,9 +25,13 @@
   <div class="container-fluid">
     
     <ul class="nav navbar-nav">
-      <li class="active"><a href="#">Home</a></li>
+      <li class="active"><a href="mainpage.php">Home</a></li>
       <li><a href="login.php">Log In</a></li>
       <li><a href="signup.php">Sign Up</a></li>
+      
+      <li><a href="login.php">Book a Meeting</a></li>
+      <li><a href="login.php">Send a Message</a></li>
+
       
     </ul>
   </div>

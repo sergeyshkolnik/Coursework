@@ -21,8 +21,11 @@
     
     <ul class="nav navbar-nav">
       <li class="active"><a href="#">Home</a></li>
-      <li><a href="login.php">Log In</a></li>
-      <li><a href="signup.php">Sign Up</a></li>
+      <li><a href="meetingrequests.php">View Meeting Requests</a></li>
+      <li><a href="coachmessage.php">Send a Message</a></li>
+      <li><a href="displaycoachmessage.php">View Message</a></li>
+      <li><a href="coachmeetings.php">View my meetings</a></li>
+
       
     </ul>
   </div>
@@ -32,24 +35,19 @@
 <?php
 include_once("connection.php");
 session_start();
-$stmt = $conn->prepare("SELECT*FROM TblChats WHERE FromCoach = 1");
+$stmt1 = $conn->prepare("SELECT*FROM TblChats WHERE FromCoach = 0");
 
-$stmt->execute();
+$stmt1->execute();
 $count=0;
 //initiates a counter to count the number of messages
 
-$stmt = $conn->prepare("SELECT Surname, Forename, TimeSent, Message FROM TblChats
-INNER JOIN TblUsers ON TblChats.Username = TblUsers.Username WHERE FromCoach = 1");
+$stmt2 = $conn->prepare("SELECT Surname, Forename, TimeSent, Message FROM TblChats
+INNER JOIN TblUsers ON TblChats.Username = TblUsers.Username WHERE FromCoach = 0");
 
-$stmt->execute();
+$stmt2->execute();
 
-$count = 0;
-$stmt = $conn->prepare("SELECT * FROM TblChats WHERE Username = :user AND FromCoach = 1");
-$stmt->bindParam(':user', $_SESSION['user']);
-$stmt->execute();
 
-// Counting the number of messages
-while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
     $count = $count + 1;
 }
 
@@ -57,9 +55,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 echo "<h1>Your Messages (" . $count . ")</h1>";
 
 // Second query to fetch the messages
-$stmt = $conn->prepare("SELECT * FROM TblChats WHERE Username = :user AND FromCoach = 1 ORDER BY TimeSent DESC");
-$stmt->bindParam(':user', $_SESSION['user']);
-$stmt->execute();
+
 
 // Start the table with Bootstrap's table-bordered class for borders
 echo "<table class='table table-bordered'>
@@ -67,17 +63,18 @@ echo "<table class='table table-bordered'>
             <tr>
                 <th scope='col'>Time Sent</th>
                 <th scope='col'>Message</th>
+                <th scope='col'>Sender</th>
                 
             </tr>
         </thead>
         <tbody>";
 
 // Loop through the messages and display each one as a row in the table
-while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+while ($row = $stmt2->fetch(PDO::FETCH_ASSOC)) {
     echo "<tr>
             <td>" . htmlspecialchars($row['TimeSent']) . "</td>
             <td>" . nl2br(htmlspecialchars($row['Message'])) . "</td>
-            
+            <td>" . nl2br(htmlspecialchars($row['Forename'])) . "</td>
           </tr>";
 }
 
